@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>News CMS</title>
+    <title>{{ article.title }} - News CMS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -17,23 +17,20 @@
         </nav>
     </header>
 
-    <main>
-        <h1>Latest News</h1>
-        
-        {% for article in articles %}
-        <article class="news-card">
+    <main class="article-page">
+        <article>
+            <h1>{{ article.title }}</h1>
+            <p class="meta">By {{ article.author.username }} on {{ article.timestamp.strftime('%B %d, %Y') }}</p>
+            <p class="category">Category: <a href="{{ url_for('category', category=article.category) }}">{{ article.category }}</a></p>
+            
             {% if article.image_url %}
-            <img src="{{ article.image_url }}" alt="{{ article.title }}">
+            <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-image">
             {% endif %}
+            
             <div class="article-content">
-                <h2><a href="{{ url_for('article', id=article.id) }}">{{ article.title }}</a></h2>
-                <p class="meta">By {{ article.author.username }} on {{ article.timestamp.strftime('%B %d, %Y') }}</p>
-                <p class="category">Category: <a href="{{ url_for('category', category=article.category) }}">{{ article.category }}</a></p>
-                <p>{{ article.content[:200] }}...</p>
-                <a href="{{ url_for('article', id=article.id) }}" class="read-more">Read More</a>
+                {{ article.content | safe }}
             </div>
         </article>
-        {% endfor %}
     </main>
 
     <footer>
